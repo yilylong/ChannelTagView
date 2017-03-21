@@ -36,7 +36,7 @@ dependencies {
 
 publish {
     userOrg = 'yilylong'//bintray.com用户名
-    groupId = 'com.zhl.CBPullRefresh'//jcenter上的路径
+    groupId = 'com.zhl.channeltagview'//jcenter上的路径
     artifactId = 'ChannelTagView'//项目名称
     publishVersion = '1.0.0'//版本号
     desc = 'an channle manager viewgroup'//描述
