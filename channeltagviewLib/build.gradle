@@ -38,7 +38,9 @@ publish {
     userOrg = 'yilylong'//bintray.com用户名
     groupId = 'com.zhl.channeltagview'//jcenter上的路径
     artifactId = 'ChannelTagView'//项目名称
-    publishVersion = '1.0.0'//版本号
+    publishVersion = '1.0.2'//版本号
     desc = 'an channle manager viewgroup'//描述
     website = 'https://github.com/yilylong/ChannelTagView'//网站
 }
+
+
