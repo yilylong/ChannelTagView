@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/categray_added_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/category_banner_view_bg"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:text="我的频道&#160;&#160;（左右滑动删除，长按拖动排序）"
+        android:textColor="#ffffff" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/added_channel_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="10dp" />
+
+    <TextView
+        android:id="@+id/categray_unadded_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/category_banner_view_bg"
+        android:padding="10dp"
+        android:text="更多频道"
+        android:textColor="#ffffff" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/unAdded_channel_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:padding="10dp" />
+
+</merge>

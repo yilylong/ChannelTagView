@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="chanles">
+        <item>热点</item>
+        <item>宏观</item>
+        <item>头条</item>
+        <item>商业</item>
+        <item>财经</item>
+        <item>证券</item>
+        <item>金融</item>
+        <item>军事</item>
+        <item>生活</item>
+        <item>本地</item>
+        <item>历史</item>
+        <item>体育</item>
+        <item>健康</item>
+        <item>教育</item>
+        <item>星座</item>
+        <item>电影</item>
+        <item>家具</item>
+        <item>数码</item>
+        <item>科技</item>
+    </string-array>
+
+
+</resources>

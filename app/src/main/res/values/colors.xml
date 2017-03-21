@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="content_color">#64ce9d</color>
+    <color name="statusbar_color">#8dbece</color>
+    <color name="swipe_back_shadow">#33000001</color>
+    <color name="color_transparent">#00000000</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#efefef</color>
+    <color name="red">#de6262</color>
+    <color name="dark">#4c4b4b</color>
+
+</resources>

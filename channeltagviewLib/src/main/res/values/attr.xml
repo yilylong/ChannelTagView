@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="channel_tag_style">
+        <attr name="channelItemBg" format="reference|integer" />
+        <attr name="channelItemDragingBg" format="reference|integer" />
+        <attr name="channelItemFixedBg" format="reference|integer" />
+        <attr name="showPathAnim" format="boolean" />
+        <attr name="fixedPos" format="integer" />
+        <attr name="addedCategroyTitleBg" format="reference|color|integer" />
+        <attr name="unAddedCategroyTitleBg" format="reference|color|integer" />
+        <attr name="colums" format="integer" />
+        <attr name="columnSpace" format="integer|reference|dimension" />
+        <attr name="channelItemTxColor" format="color|reference" />
+        <attr name="channelItemTxSize" format="reference|dimension" />
+    </declare-styleable>
+</resources>

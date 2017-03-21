@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<cn.bingoogolapple.badgeview.BGABadgeTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/item_tv"
+    android:layout_width="match_parent"
+    android:layout_height="30dp"
+    android:background="@drawable/channel_item_bg"
+    android:gravity="center"
+    android:textColor="@color/black"
+    android:textSize="15sp"
+    app:badge_dragable="true"
+    app:badge_gravity="rightTop">
+
+
+</cn.bingoogolapple.badgeview.BGABadgeTextView>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="content_color">#64ce9d</color>
+    <color name="statusbar_color">#8dbece</color>
+    <color name="drak_blue">#17b6e2</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="item_tag_stokre_nor">#989898</color>
+    <color name="item_tag_stokre_pre">#8dbece</color>
+    <color name="item_tag_stokre_unavailable">#c8c9ca</color>
+    <color name="item_tag_bg_unavailable">#338e8e91</color>
+    <color name="item_tag_bg_unavailable_pre">#33000001</color>
+    <color name="category_banner_view_bg">#4ea6ed</color>
+
+</resources>
