@@ -1,7 +1,7 @@
 # ChannelTagView
 一个频道管理view，可拖拽排序，滑动删除。
 ----
-<img src='/GIF.gif'/>
+<img src='https://github.com/yilylong/ChannelTagView/blob/master/GIF.gif'/>
 
 使用
 --
