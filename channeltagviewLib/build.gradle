@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
-
+//apply plugin: 'com.novoda.bintray-release'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+version = "1.0.2"
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -34,13 +36,93 @@ dependencies {
     compile 'cn.bingoogolapple:bga-badgeview:1.1.3@aar'
 }
 
-publish {
-    userOrg = 'yilylong'//bintray.com用户名
-    groupId = 'com.zhl.channeltagview'//jcenter上的路径
-    artifactId = 'ChannelTagView'//项目名称
-    publishVersion = '1.0.2'//版本号
-    desc = 'an channle manager viewgroup'//描述
-    website = 'https://github.com/yilylong/ChannelTagView'//网站
+
+def siteUrl = 'https://github.com/yilylong/ChannelTagView'
+
+def gitUrl = 'https://github.com/yilylong/ChannelTagView.git'
+
+group = "com.zhl.channeltagview"
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                name 'an channle manager viewgroup'
+                url siteUrl
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'yilylong'
+                        name 'zhl'
+                        email 'yilylong@163.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
 }
 
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    configurations = ['archives']
+    pkg {
+        repo = "maven"
+        name = "ChannelTagView"                // project name in jcenter
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ["Apache-2.0"]
+        publish = true
+    }
+}
+javadoc { //jav doc采用utf-8编码否则会报“GBK的不可映射字符”错误
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
+}
+
+
+//publish {
+//    userOrg = 'yilylong'//bintray.com用户名
+//    groupId = 'com.zhl.channeltagview'//jcenter上的路径
+//    artifactId = 'ChannelTagView'//项目名称
+//    publishVersion = '1.0.2'//版本号
+//    desc = 'an channle manager viewgroup'//描述
+//    website = 'https://github.com/yilylong/ChannelTagView'//网站
+//}
 

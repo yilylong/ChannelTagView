@@ -6,7 +6,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.3.0'
-        classpath 'com.novoda:bintray-release:0.4.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
     }
@@ -20,77 +21,4 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
-}
-//ext {
-//    ARTIFACT_ID = 'ChannelTagView'
-//    VERSION_NAME = '1.0.2'
-//    VERSION_CODE = 1 //your version
-//
-//    DESCRIPTION = 'an channle manager viewgroup'
-//
-//    SITE_URL = 'https://github.com/yilylong/ChannelTagView'
-//    GIT_URL = 'https://github.com/yilylong/ChannelTagView'
-//    GROUP_NAME = 'YOUR_GROUP_NAME'
-//    COMPILE_SDK = 25
-//    BUILD_TOOLS = '25.0.2'
-//
-//    MODULE_NAME = 'channeltagviewLib'
-//
-//    LICENSE = 'http://www.apache.org/licenses/LICENSE-2.0'
-//
-//    DEVELOPER_ID = 'YOUR_DEVELOPER_ID'
-//    DEVELOPER_NAME = 'YOUR_NAME'
-//    DEVELOPER_EMAIL = 'YOUR_EMAIL_ADDRESS'
-//
-//    IS_UPLOADING = project.getGradle().startParameter.taskNames.any{it.contains('bintrayUpload')}
-//}
-
-subprojects {
-    group = 'com.zhl.channeltagview'
-    version = '1.0.2'
-
-    if (project.getGradle().startParameter.taskNames.any{it.contains('bintrayUpload')} && project.name in ['channeltagviewLib']) {
-        println project.name
-        apply plugin: 'maven'
-
-        gradle.taskGraph.whenReady { taskGraph ->
-            taskGraph.getAllTasks().find {
-                it.path == ":$project.name:generatePomFileForMavenPublication"
-            }.doLast {
-                file("build/publications/maven/pom-default.xml").delete()
-                println 'Overriding pom-file to make sure we can sync to maven central!'
-                pom {
-                    //noinspection GroovyAssignabilityCheck
-                    project {
-                        name "$project.name"
-                        artifactId 'ChannelTagView'
-                        packaging project.name == 'compiler' ? 'jar' : 'aar'
-                        description 'an channle manager viewgroup'
-                        url 'https://github.com/yilylong/ChannelTagView'
-                        version '1.0.2'
-
-                        scm {
-                            url 'https://github.com/yilylong/ChannelTagView.git'
-                            connection 'https://github.com/yilylong/ChannelTagView.git'
-                            developerConnection 'https://github.com/yilylong/ChannelTagView.git'
-                        }
-
-                        licenses {
-                            license {
-                                name 'http://www.apache.org/licenses/LICENSE-2.0'
-                            }
-                        }
-
-                        developers {
-                            developer {
-                                id 'yilylong'
-                                name 'zhl'
-                                email 'yilylong@163.com'
-                            }
-                        }
-                    }
-                }.writeTo("build/publications/maven/pom-default.xml")
-            }
-        }
-    }
 }
