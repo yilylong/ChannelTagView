@@ -79,9 +79,17 @@ task sourcesJar(type: Jar) {
     classifier = 'sources'
 }
 
+
 task javadoc(type: Javadoc) {
     source = android.sourceSets.main.java.srcDirs
     classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+javadoc { //jav doc采用utf-8编码否则会报“GBK的不可映射字符”错误
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+    }
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
@@ -109,12 +117,7 @@ bintray {
         publish = true
     }
 }
-javadoc { //jav doc采用utf-8编码否则会报“GBK的不可映射字符”错误
-    options{
-        encoding "UTF-8"
-        charSet 'UTF-8'
-    }
-}
+
 
 
 //publish {
