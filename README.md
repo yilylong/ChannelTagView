@@ -3,7 +3,16 @@
 ----
 <img src="GIF.gif"/>
 
-<video src="show.mp4"/>
+添加频道分组功能
+--
+<img src="show_category.png"/>
+<video id="video" controls="" preload="none" poster="show_category.png">
+      <source id="mp4" src="show.mp4" type="video/mp4">
+      <p>Your user agent does not support the HTML5 Video element.</p>
+</video>
+
+<iframe height=480 width=800 src="show.mp4"/>
+
 
 使用
 --
