@@ -8,7 +8,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -34,6 +34,7 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.0'
     compile 'com.zhy:base-rvadapter:3.0.3'
     compile 'cn.bingoogolapple:bga-badgeview:1.1.3@aar'
+    compile 'com.github.donkingliang:GroupedRecyclerViewAdapter:1.0.1'
 }
 
 

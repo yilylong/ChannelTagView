@@ -2,25 +2,37 @@
 <resources>
 
     <string-array name="chanles">
+        <!-- 资讯 -->
         <item>热点</item>
         <item>宏观</item>
         <item>头条</item>
         <item>商业</item>
         <item>财经</item>
-        <item>证券</item>
-        <item>金融</item>
+        <item>直播</item>
         <item>军事</item>
-        <item>生活</item>
+        <!-- 金融 -->
+        <item>证券</item>
+        <item>股票</item>
+        <item>彩票</item>
+        <!-- 生活 -->
         <item>本地</item>
-        <item>历史</item>
-        <item>体育</item>
         <item>健康</item>
         <item>教育</item>
-        <item>星座</item>
-        <item>电影</item>
-        <item>家具</item>
+        <item>家居</item>
+        <item>亲子</item>
+        <item>时尚</item>
+        <item>健身</item>
+        <item>读书</item>
+        <item>萌宠</item>
+        <!-- 娱乐 -->
         <item>数码</item>
+        <item>电影</item>
+        <item>旅游</item>
+        <item>游戏</item>
+        <!-- 人文 -->
         <item>科技</item>
+        <item>历史</item>
+        <item>体育</item>
     </string-array>
 
 

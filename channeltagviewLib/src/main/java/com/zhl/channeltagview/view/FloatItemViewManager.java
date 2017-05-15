@@ -50,7 +50,8 @@ public class FloatItemViewManager {
             if(bgResid!=-1){
                 floatItemView.setFloatViewBg(bgResid);
             }
-            floatItemView.getFloatView().setTextSize(TypedValue.COMPLEX_UNIT_PX,((TextView)targetView).getTextSize());
+            // TODO 这里未添加频道的textsize 比已添加的textsize 要大1 还没找到原因 使用同样的item布局
+            floatItemView.getFloatView().setTextSize(TypedValue.COMPLEX_UNIT_PX,((TextView)targetView).getTextSize()-1);
             floatItemView.getFloatView().setTextColor(((TextView)targetView).getCurrentTextColor());
 
             if (smallWindowParams == null) {

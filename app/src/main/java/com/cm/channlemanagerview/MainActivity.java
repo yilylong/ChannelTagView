@@ -3,9 +3,11 @@ package com.cm.channlemanagerview;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.zhl.channeltagview.bean.ChannelItem;
+import com.zhl.channeltagview.bean.GroupItem;
 import com.zhl.channeltagview.listener.OnChannelItemClicklistener;
 import com.zhl.channeltagview.listener.UserActionListener;
 import com.zhl.channeltagview.view.ChannelTagView;
@@ -18,17 +20,26 @@ public class MainActivity extends AppCompatActivity {
     private ChannelTagView channelTagView;
     private ArrayList<ChannelItem> addedChannels = new ArrayList<>();
     private ArrayList<ChannelItem> unAddedChannels = new ArrayList<>();
+    private ArrayList<GroupItem> unAddedItems = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         channelTagView = (ChannelTagView) findViewById(R.id.channel_tag_view);
         initData();
-        channelTagView.initChannels(addedChannels, unAddedChannels, new ChannelTagView.RedDotRemainderListener() {
+        Button btn = (Button) findViewById(R.id.btn_opencategory);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                channelTagView.oPenCategory(!channelTagView.isOpenCategory());
+            }
+        });
+        channelTagView.showPahtAnim(true);
+        channelTagView.initChannels(addedChannels, unAddedItems,true,new ChannelTagView.RedDotRemainderListener() {
 
             @Override
             public boolean showAddedChannelBadge(BGABadgeTextView itemView, int position) {
-                if(addedChannels.get(position).title.equals("生活")){
+                if(addedChannels.get(position).title.equals("直播")){
                     return true;
                 }else{
                     return false;
@@ -60,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void OnDragDismiss(BGABadgeTextView itemView, int position) {
-
+                Toast.makeText(MainActivity.this,"拖拽取消红点提示-",Toast.LENGTH_SHORT).show();
+                itemView.hiddenBadge();
             }
 
         });
@@ -100,17 +112,59 @@ public class MainActivity extends AppCompatActivity {
 
     private void initData() {
         String[] chanles = getResources().getStringArray(R.array.chanles);
-        for (int i = 0; i < chanles.length/2; i++) {
+        for (int i = 0; i < 7; i++) {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
+            item.category ="头条";
             addedChannels.add(item);
         }
-        for (int i = chanles.length/2; i < chanles.length; i++) {
+        GroupItem groupFinance = new GroupItem();
+        groupFinance.category = "金融";
+        for (int i = 7; i < 9; i++) {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
+            item.category ="金融";
             unAddedChannels.add(item);
+            groupFinance.addChanelItem(item);
         }
+        unAddedItems.add(groupFinance);
+
+        GroupItem groupLife = new GroupItem();
+        groupLife.category = "生活";
+        for (int i = 9; i < 18; i++) {
+            ChannelItem item = new ChannelItem();
+            item.id = i;
+            item.title = chanles[i];
+            item.category ="生活";
+            unAddedChannels.add(item);
+            groupLife.addChanelItem(item);
+        }
+        unAddedItems.add(groupLife);
+
+        GroupItem groupEntertainment = new GroupItem();
+        groupEntertainment.category = "娱乐";
+        for (int i = 18; i < 22; i++) {
+            ChannelItem item = new ChannelItem();
+            item.id = i;
+            item.title = chanles[i];
+            item.category ="娱乐";
+            unAddedChannels.add(item);
+            groupEntertainment.addChanelItem(item);
+        }
+        unAddedItems.add(groupEntertainment);
+
+        GroupItem Grouphumanity = new GroupItem();
+        Grouphumanity.category = "人文";
+        for (int i = 22; i <= 25; i++) {
+            ChannelItem item = new ChannelItem();
+            item.id = i;
+            item.title = chanles[i];
+            item.category ="人文";
+            unAddedChannels.add(item);
+            Grouphumanity.addChanelItem(item);
+        }
+        unAddedItems.add(Grouphumanity);
     }
 }

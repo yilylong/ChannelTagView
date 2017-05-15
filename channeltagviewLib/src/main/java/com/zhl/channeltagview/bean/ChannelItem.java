@@ -7,5 +7,6 @@ package com.zhl.channeltagview.bean;
 public class ChannelItem {
     public int id;
     public int iconResid;
+    public String category;
     public String title;
 }
