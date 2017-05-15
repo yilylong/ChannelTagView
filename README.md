@@ -3,6 +3,8 @@
 ----
 <img src="GIF.gif"/>
 
+<video src="show.mp4"/>
+
 使用
 --
 
