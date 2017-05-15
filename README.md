@@ -11,7 +11,6 @@
       <p>Your user agent does not support the HTML5 Video element.</p>
 </video>
 
-<iframe height=480 width=800 src="show.mp4"/>
 
 
 使用
