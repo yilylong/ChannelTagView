@@ -1,4 +1,6 @@
+[![](https://jitpack.io/v/yilylong/ChannelTagView.svg)](https://jitpack.io/#yilylong/ChannelTagView)
 # ChannelTagView
+
 一个频道管理view，可拖拽排序，滑动删除。
 ----
 <img src="GIF.gif"/>
@@ -15,8 +17,21 @@
 
 使用
 --
+ step1.Add it in your root build.gradle at the end of repositories:
+-
 
-gradle 引用》  试用了gradle-bintray-plugin 和 bintray-release 插件都出现各种问题。有没有什么方法能传到maven 和jcenter?
+    allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+
+stpe2.Add the dependency:
+-
+    dependencies {
+	        compile 'com.github.yilylong:ChannelTagView:1.0.0'
+	}
 
 
 xml中直接引用：
