@@ -17,8 +17,12 @@
 
 使用
 --
-
-gradle 引用》  试用了gradle-bintray-plugin 和 bintray-release 插件都出现各种问题。有没有什么方法能传到maven 和jcenter?
+    allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
 
 
 xml中直接引用：
