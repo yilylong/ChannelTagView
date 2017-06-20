@@ -1,4 +1,6 @@
+[![](https://jitpack.io/v/yilylong/ChannelTagView.svg)](https://jitpack.io/#yilylong/ChannelTagView)
 # ChannelTagView
+
 一个频道管理view，可拖拽排序，滑动删除。
 ----
 <img src="GIF.gif"/>
