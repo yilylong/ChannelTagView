@@ -51,9 +51,13 @@ public class ChannelTagView extends LinearLayout {
      */
     public int colums = 5;
     /**
-     * 频道显示行间距、列间距
+     * 频道列间距
      */
-    public int columnSpace = 10;
+    public int columnHorizontalSpace = 10;
+    /**
+     * 频道行间距
+     */
+    public int columnVerticalSpace = 10;
     /**
      * 已添加的频道数据集合
      */
@@ -105,7 +109,7 @@ public class ChannelTagView extends LinearLayout {
      */
     private int channelItemDragingBg;
     /**
-     * 频道背景
+     * 频道item背景
      */
     private int channelItemBg;
     /**
@@ -130,6 +134,9 @@ public class ChannelTagView extends LinearLayout {
      * 是否开启分组
      */
     private boolean openCategory;
+    private GridLayoutManager addedLayoutManager;
+    private GroupedGridLayoutManager unAddLayoutManager;
+    private SpacesItemDecoration itemDecoration;
 
 
     public ChannelTagView(Context context) {
@@ -151,7 +158,8 @@ public class ChannelTagView extends LinearLayout {
         channelItemDragingBg = array.getResourceId(R.styleable.channel_tag_style_channelItemDragingBg, R.drawable.channel_item_draging);
         fixedPos = array.getInt(R.styleable.channel_tag_style_fixedPos, -1);
         colums = array.getInt(R.styleable.channel_tag_style_colums, 5);
-        columnSpace = array.getDimensionPixelOffset(R.styleable.channel_tag_style_columnSpace, 10);
+        columnHorizontalSpace = array.getDimensionPixelOffset(R.styleable.channel_tag_style_columnHorizontalSpace, 10);
+        columnVerticalSpace = array.getDimensionPixelOffset(R.styleable.channel_tag_style_columnVerticalSpace, 10);
         channelItemTxColor = array.getColor(R.styleable.channel_tag_style_channelItemTxColor, 0xff000000);
         channelItemTxSize = array.getDimensionPixelOffset(R.styleable.channel_tag_style_channelItemTxSize, 39);
         setOrientation(VERTICAL);
@@ -166,9 +174,9 @@ public class ChannelTagView extends LinearLayout {
         categaryAddedTopView.setBackgroundResource(categoryAddedBannerBg);
         categrayUnAddedTopView = (TextView) contentView.findViewById(R.id.categray_unadded_title);
         categrayUnAddedTopView.setBackgroundResource(categoryUnAddedBannerBg);
-        addedRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), colums));
-        addedRecyclerView.addItemDecoration(new SpacesItemDecoration(columnSpace));
-        unaddedRecyclerView.addItemDecoration(new SpacesItemDecoration(columnSpace));
+        addedRecyclerView.setLayoutManager(addedLayoutManager = new GridLayoutManager(getContext(), colums));
+        addedRecyclerView.addItemDecoration(itemDecoration = new SpacesItemDecoration(columnHorizontalSpace, columnVerticalSpace));
+        unaddedRecyclerView.addItemDecoration(itemDecoration);
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public boolean isItemViewSwipeEnabled() {
@@ -268,7 +276,7 @@ public class ChannelTagView extends LinearLayout {
         itemTouchHelper.attachToRecyclerView(addedRecyclerView);
         addedRecyclerView.setAdapter(addedAdapter = new ChannelAdapter(getContext(), R.layout.item_channel_view, addedChannels));
         unaddedRecyclerView.setAdapter(unAddedAdapter = new GroupedListAdapter(getContext(), unAddedGroups, openCategory));
-        unaddedRecyclerView.setLayoutManager(new GroupedGridLayoutManager(getContext(), colums, unAddedAdapter));
+        unaddedRecyclerView.setLayoutManager(unAddLayoutManager = new GroupedGridLayoutManager(getContext(), colums, unAddedAdapter));
         addedAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
@@ -298,7 +306,7 @@ public class ChannelTagView extends LinearLayout {
                     addedAdapter.notifyItemInserted(addedChannels.size() - 1);
                 }
                 if (onChannelItemClicklistener != null) {
-                    // 用户在这个回调处理自己的逻辑 如果分组 会添加一个分组头 所以要去见分组头
+                    // 用户在这个回调处理自己的逻辑 如果分组 会添加一个分组头 所以要减去分组头
                     onChannelItemClicklistener.onUnAddedChannelItemClick(convertView, openCategory ? position - (groupPosition + 1) : position);
                 }
             }
@@ -387,7 +395,7 @@ public class ChannelTagView extends LinearLayout {
     }
 
     /**
-     * 开启分组
+     * 是否开启分组
      *
      * @param openCategory
      */
@@ -396,6 +404,11 @@ public class ChannelTagView extends LinearLayout {
         unAddedAdapter.setOpenCategory(openCategory);
     }
 
+    /**
+     * 当前是否已开启分组
+     *
+     * @return
+     */
     public boolean isOpenCategory() {
         return openCategory;
     }
@@ -418,10 +431,10 @@ public class ChannelTagView extends LinearLayout {
         if (null != lastCheckedChild) {
             lastCheckedChild.getGlobalVisibleRect(rectLast);
             if (addedChannels.size() % colums == 0) {// 换行
-                tragetX = addedRecyclerView.getLeft() + addedRecyclerView.getPaddingLeft() + columnSpace;
-                tragetY = rectLast.top + tragetView.getHeight() + 2 * columnSpace - statusBarHeight;
+                tragetX = addedRecyclerView.getLeft() + addedRecyclerView.getPaddingLeft() + columnHorizontalSpace;
+                tragetY = rectLast.top + tragetView.getHeight() + 2 * columnVerticalSpace - statusBarHeight;
             } else {
-                tragetX = rectLast.right + columnSpace * 2;
+                tragetX = rectLast.right + 2 * columnHorizontalSpace;
                 tragetY = rectLast.top - statusBarHeight;
             }
         } else {
@@ -517,26 +530,53 @@ public class ChannelTagView extends LinearLayout {
     }
 
     private class SpacesItemDecoration extends RecyclerView.ItemDecoration {
-        private int space;
+        private int horizontalSpace, verticalSpace;
 
-        public SpacesItemDecoration(int space) {
-            this.space = space;
+        public SpacesItemDecoration(int spaceH, int spaceV) {
+            this.horizontalSpace = spaceH;
+            this.verticalSpace = spaceV;
         }
 
         @Override
         public void getItemOffsets(Rect outRect, View view,
                                    RecyclerView parent, RecyclerView.State state) {
-            outRect.left = space;
-            outRect.right = space;
-            outRect.bottom = space;
-            outRect.top = space;
+            outRect.left = horizontalSpace;
+            outRect.right = horizontalSpace;
+            outRect.bottom = verticalSpace;
+            outRect.top = verticalSpace;
+        }
+
+        public int getHorizontalSpace() {
+            return horizontalSpace;
+        }
+
+        public void setHorizontalSpace(int horizontalSpace) {
+            this.horizontalSpace = horizontalSpace;
+        }
+
+        public int getVerticalSpace() {
+            return verticalSpace;
+        }
+
+        public void setVerticalSpace(int verticalSpace) {
+            this.verticalSpace = verticalSpace;
         }
     }
 
+    /**
+     * get Added channel group RecyclerView;
+     *
+     * @return
+     */
     public RecyclerView getAddedRecyclerView() {
         return addedRecyclerView;
     }
 
+    /**
+     * get unAdded channel group RecyclerView
+     *
+     * @return
+     */
     public RecyclerView getUnaddedRecyclerView() {
         return unaddedRecyclerView;
     }
@@ -559,40 +599,109 @@ public class ChannelTagView extends LinearLayout {
         return categrayUnAddedTopView;
     }
 
-    public void setFixedChannelBg(int fixedChannelBg) {
-        this.fixedChannelBg = fixedChannelBg;
-    }
-
+    /**
+     * 是否开启轨迹动画
+     *
+     * @param showPahtAnim
+     */
     public void showPahtAnim(boolean showPahtAnim) {
         this.showPahtAnim = showPahtAnim;
     }
 
-    public void setOnChannelItemClicklistener(OnChannelItemClicklistener onChannelItemClicklistener) {
-        this.onChannelItemClicklistener = onChannelItemClicklistener;
-    }
-
-    public void setUserActionListener(UserActionListener userActionListener) {
-        this.userActionListener = userActionListener;
-    }
-
+    /**
+     * 设置channel item的列数
+     *
+     * @param colums
+     */
     public void setColums(int colums) {
+        if (colums <= 0) {
+            return;
+        }
         this.colums = colums;
+        addedLayoutManager.setSpanCount(colums);
+        unAddLayoutManager.setSpanCount(colums);
     }
 
-    public void setColumnSpace(int columnSpace) {
-        this.columnSpace = columnSpace;
+
+    /**
+     * 获取列间距
+     *
+     * @return
+     */
+    public int getColumnHorizontalSpace() {
+        return columnHorizontalSpace;
     }
 
+    /**
+     * 设置列间距
+     *
+     * @param columnHorizontalSpace
+     */
+    public void setColumnHorizontalSpace(int columnHorizontalSpace) {
+        if (columnHorizontalSpace < 0) {
+            return;
+        }
+        this.columnHorizontalSpace = columnHorizontalSpace;
+        itemDecoration.setHorizontalSpace(columnHorizontalSpace);
+    }
+
+    /**
+     * 获取行间距
+     *
+     * @return
+     */
+    public int getColumnVerticalSpace() {
+        return columnVerticalSpace;
+    }
+
+    /**
+     * 获取行间距
+     *
+     * @param columnVerticalSpace
+     */
+    public void setColumnVerticalSpace(int columnVerticalSpace) {
+        if (columnVerticalSpace < 0) {
+            return;
+        }
+        this.columnVerticalSpace = columnVerticalSpace;
+        itemDecoration.setVerticalSpace(columnVerticalSpace);
+    }
+
+    /**
+     * set which  channel item fixed position
+     *
+     * @param fixedPos
+     */
     public void setFixedPos(int fixedPos) {
         this.fixedPos = fixedPos;
     }
 
-    public void setChannelItemDragingBg(int channelItemDragingBg) {
-        this.channelItemDragingBg = channelItemDragingBg;
+    /**
+     * set fixed item background ResID
+     *
+     * @param fixedChannelBgResID
+     */
+    public void setFixedChannelBg(int fixedChannelBgResID) {
+        this.fixedChannelBg = fixedChannelBgResID;
     }
 
-    public void setChannelItemBg(int channelItemBg) {
-        this.channelItemBg = channelItemBg;
+    /**
+     * set item draging background Res ID
+     *
+     * @param channelItemDragingBgResID
+     */
+    public void setChannelItemDragingBg(int channelItemDragingBgResID) {
+        this.channelItemDragingBg = channelItemDragingBgResID;
+    }
+
+    /**
+     * set channel item background ResID
+     *
+     * @param channelItemBgResID
+     */
+    public void setChannelItemBg(int channelItemBgResID) {
+        this.channelItemBg = channelItemBgResID;
+        unAddedAdapter.setItemBg(channelItemBg);
     }
 
     /**
@@ -602,6 +711,7 @@ public class ChannelTagView extends LinearLayout {
      */
     public void setChannelItemTxColor(int channelItemTxColor) {
         this.channelItemTxColor = channelItemTxColor;
+        unAddedAdapter.setItemTxColor(channelItemTxColor);
     }
 
     /**
@@ -622,30 +732,87 @@ public class ChannelTagView extends LinearLayout {
         this.channelItemTxSize = MeasureUtil.sp2px(getContext(), channelItemTxSize);
     }
 
+    /**
+     * 设置已添加栏目的banner background
+     *
+     * @param categoryAddedBannerBg
+     */
     public void setCategoryAddedBannerBg(int categoryAddedBannerBg) {
         this.categoryAddedBannerBg = categoryAddedBannerBg;
         categaryAddedTopView.setBackgroundResource(categoryAddedBannerBg);
     }
 
+    /**
+     * 设置未添加栏目的banner background
+     *
+     * @param categoryUnAddedBannerBg
+     */
     public void setCategoryUnAddedBannerBg(int categoryUnAddedBannerBg) {
         this.categoryUnAddedBannerBg = categoryUnAddedBannerBg;
         categrayUnAddedTopView.setBackgroundResource(categoryUnAddedBannerBg);
     }
 
+    /**
+     * 设置已添加栏目banner的文字
+     *
+     * @param bannerTX
+     */
+    public void setCategaryAddedBannerTX(String bannerTX) {
+        categaryAddedTopView.setText(bannerTX);
+    }
+
+    /**
+     * 设置未添加栏目的banner文字
+     *
+     * @param bannerTX
+     */
+    public void setCategrayUnAddedBannerTX(String bannerTX) {
+        categrayUnAddedTopView.setText(bannerTX);
+    }
+
+    /**
+     * 设置 banner的文字大小
+     *
+     * @param pixel
+     */
     public void setCategoryBannerTXsize(int pixel) {
         categaryAddedTopView.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixel);
         categrayUnAddedTopView.setTextSize(TypedValue.COMPLEX_UNIT_PX, pixel);
     }
 
+    /**
+     * 设置banner的文字颜色
+     *
+     * @param colorValue
+     */
     public void setCategoryBannerTXColor(int colorValue) {
         categaryAddedTopView.setTextColor(colorValue);
         categrayUnAddedTopView.setTextColor(colorValue);
     }
 
-    public ArrayList<ChannelItem> getAddedChannels() {
-        return addedChannels;
+    /**
+     * 设置未添加栏目的分组头 bg
+     *
+     * @param bgResID
+     */
+    public void setCategoryItemBg(int bgResID) {
+        unAddedAdapter.setCategoryBg(bgResID);
     }
 
+    /**
+     * 设置未添加栏目的分组头文字颜色
+     * @param color
+     */
+    public void setCategoryItemTxColor(int color){
+        unAddedAdapter.setCategoryTxColor(color);
+    }
+    /**
+     * 设置未添加栏目的分组头文字大小
+     * @param size
+     */
+    public void setCategoryItemTxSize(int size){
+        unAddedAdapter.setCategoryTxSize(size);
+    }
 
     @Override
     protected void onDetachedFromWindow() {
@@ -661,6 +828,9 @@ public class ChannelTagView extends LinearLayout {
         return unAddedChannels;
     }
 
+    public ArrayList<ChannelItem> getAddedChannels() {
+        return addedChannels;
+    }
 
     /**
      * 描述：频道item的红点提示处理回调接口
@@ -709,5 +879,23 @@ public class ChannelTagView extends LinearLayout {
          */
         public void OnDragDismiss(BGABadgeTextView itemView, int position);
 
+    }
+
+    /**
+     * 设置channel item 的点击回调事件
+     *
+     * @param onChannelItemClicklistener
+     */
+    public void setOnChannelItemClicklistener(OnChannelItemClicklistener onChannelItemClicklistener) {
+        this.onChannelItemClicklistener = onChannelItemClicklistener;
+    }
+
+    /**
+     * 设置对channel item的拖拽、欢动的操作回调监听
+     *
+     * @param userActionListener
+     */
+    public void setUserActionListener(UserActionListener userActionListener) {
+        this.userActionListener = userActionListener;
     }
 }

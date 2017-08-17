@@ -9,7 +9,8 @@
         <attr name="addedCategroyTitleBg" format="reference|color|integer" />
         <attr name="unAddedCategroyTitleBg" format="reference|color|integer" />
         <attr name="colums" format="integer" />
-        <attr name="columnSpace" format="integer|reference|dimension" />
+        <attr name="columnHorizontalSpace" format="integer|reference|dimension" />
+        <attr name="columnVerticalSpace" format="integer|reference|dimension" />
         <attr name="channelItemTxColor" format="color|reference" />
         <attr name="channelItemTxSize" format="reference|dimension" />
     </declare-styleable>

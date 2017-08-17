@@ -35,6 +35,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         channelTagView.showPahtAnim(true);
+        channelTagView.setCategoryItemBg(R.color.content_color);
+//        channelTagView.setChannelItemTxColor(Color.BLUE);
+//        channelTagView.setChannelItemBg(R.drawable.custom_channel_item_bg);
+//        channelTagView.setCategrayUnAddedBannerTX("更多栏目");
+//        channelTagView.setCategoryAddedBannerBg(R.color.content_color);
+//        channelTagView.setCategoryBannerTXsize(40);
+//        channelTagView.setCategoryBannerTXColor(Color.argb(255,221,224,98));
+//        channelTagView.setColumnVerticalSpace(20);
         channelTagView.initChannels(addedChannels, unAddedItems,true,new ChannelTagView.RedDotRemainderListener() {
 
             @Override

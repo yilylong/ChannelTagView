@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <cn.bingoogolapple.badgeview.BGABadgeTextView
         android:id="@+id/banner_title"
         android:layout_width="match_parent"
         android:layout_height="30dp"

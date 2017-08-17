@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 /**
- * 描述：浮动广告管理
+ * 描述：浮动窗口管理
  * Created by zhaohl on 2016-11-3.
  */
 public class FloatItemViewManager {
