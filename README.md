@@ -21,7 +21,7 @@
 stpe2.Add the dependency:
 -
     dependencies {
-	        compile 'com.github.yilylong:ChannelTagView:1.0.0'
+	        compile 'com.github.yilylong:ChannelTagView:1.0.1'
 	}
 
 
