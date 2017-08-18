@@ -21,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.donkingliang.groupedadapter.adapter.GroupedRecyclerViewAdapter;
@@ -144,7 +145,9 @@ public class ChannelTagView extends LinearLayout {
      * item 左侧icon drawable
      */
     private Drawable itemDrawableLeft;
+    private int itemBgDrawableRes = -1;
     private boolean showItemDrawableLeft;
+    private RelativeLayout.LayoutParams leftDrawableParams;
     /**
      * 是否可以侧滑
      */
@@ -167,8 +170,8 @@ public class ChannelTagView extends LinearLayout {
         showPahtAnim = array.getBoolean(R.styleable.channel_tag_style_showPathAnim, true);
         channelItemBg = array.getResourceId(R.styleable.channel_tag_style_channelItemBg, R.drawable.channel_item_bg);
         fixedChannelBg = array.getResourceId(R.styleable.channel_tag_style_channelItemFixedBg, R.drawable.fixed_item_bg);
-        categoryAddedBannerBg = array.getResourceId(R.styleable.channel_tag_style_addedCategroyTitleBg, R.color.category_banner_view_bg);
-        categoryUnAddedBannerBg = array.getResourceId(R.styleable.channel_tag_style_unAddedCategroyTitleBg, R.color.category_banner_view_bg);
+        categoryAddedBannerBg = array.getResourceId(R.styleable.channel_tag_style_addedCategroyTitleBg, R.color.cmv_category_banner_view_bg);
+        categoryUnAddedBannerBg = array.getResourceId(R.styleable.channel_tag_style_unAddedCategroyTitleBg, R.color.cmv_category_banner_view_bg);
         channelItemDragingBg = array.getResourceId(R.styleable.channel_tag_style_channelItemDragingBg, R.drawable.channel_item_draging);
         fixedPos = array.getInt(R.styleable.channel_tag_style_fixedPos, -1);
         colums = array.getInt(R.styleable.channel_tag_style_colums, 5);
@@ -519,6 +522,12 @@ public class ChannelTagView extends LinearLayout {
                 if (itemDrawableLeft != null) {
                     drawableLeft.setImageDrawable(itemDrawableLeft);
                 }
+                if (itemBgDrawableRes != -1) {
+                    drawableLeft.setBackgroundResource(itemBgDrawableRes);
+                }
+                if (leftDrawableParams != null) {
+                    drawableLeft.setLayoutParams(leftDrawableParams);
+                }
                 drawableLeft.setVisibility(VISIBLE);
                 drawableLeft.setOnClickListener(new OnClickListener() {
                     @Override
@@ -846,11 +855,13 @@ public class ChannelTagView extends LinearLayout {
 
     /**
      * get weather swipe enable
+     *
      * @return true or false
      */
     public boolean isSwipeEnable() {
         return swipeEnable;
     }
+
     /**
      * set weather swipe enable
      */
@@ -866,6 +877,7 @@ public class ChannelTagView extends LinearLayout {
 
     /**
      * weather or not show item left drawable
+     *
      * @param showDrawableLeft
      */
     public void showItemDrawableLeft(boolean showDrawableLeft) {
@@ -877,6 +889,7 @@ public class ChannelTagView extends LinearLayout {
 
     /**
      * get weather or not show item left drawbale
+     *
      * @return
      */
     public boolean isShowItemDrawableLeft() {
@@ -885,11 +898,22 @@ public class ChannelTagView extends LinearLayout {
 
     /**
      * set item left drawable
+     *
      * @param itemDrawableLeft
      */
     public void setItemDrawableLeft(Drawable itemDrawableLeft) {
         this.itemDrawableLeft = itemDrawableLeft;
     }
+
+    public void setItemLeftDrawableBgRes(int itemLeftDrawableBgRes) {
+        this.itemBgDrawableRes = itemLeftDrawableBgRes;
+    }
+
+    public void setItemLeftDrawableLayoutParams(RelativeLayout.LayoutParams layoutParams) {
+        this.leftDrawableParams = layoutParams;
+    }
+
+    ;
 
     public ArrayList<ChannelItem> getUnAddedChannels() {
         unAddedChannels.clear();

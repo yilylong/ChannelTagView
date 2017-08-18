@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         channelTagView.showPahtAnim(true);
+//        channelTagView.setItemLeftDrawableLayoutParams(new RelativeLayout.LayoutParams(50,50));
 //        channelTagView.showItemDrawableLeft(true);
 //        channelTagView.setSwipeEnable(false);
 //        channelTagView.setCategoryItemBg(R.color.content_color);
