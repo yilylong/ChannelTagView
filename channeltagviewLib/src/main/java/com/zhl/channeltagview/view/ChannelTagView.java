@@ -9,6 +9,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +19,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -46,6 +48,7 @@ import cn.bingoogolapple.badgeview.BGABadgeTextView;
  */
 
 public class ChannelTagView extends LinearLayout {
+    private static final int MIN_INTERVAL_TIME = 500;
     /**
      * 频道显示列数
      */
@@ -137,6 +140,17 @@ public class ChannelTagView extends LinearLayout {
     private GridLayoutManager addedLayoutManager;
     private GroupedGridLayoutManager unAddLayoutManager;
     private SpacesItemDecoration itemDecoration;
+    /**
+     * item 左侧icon drawable
+     */
+    private Drawable itemDrawableLeft;
+    private boolean showItemDrawableLeft;
+    /**
+     * 是否可以侧滑
+     */
+    private boolean swipeEnable = true;
+    private boolean longPressEnable = true;
+    private long lastClickTime;
 
 
     public ChannelTagView(Context context) {
@@ -162,6 +176,7 @@ public class ChannelTagView extends LinearLayout {
         columnVerticalSpace = array.getDimensionPixelOffset(R.styleable.channel_tag_style_columnVerticalSpace, 10);
         channelItemTxColor = array.getColor(R.styleable.channel_tag_style_channelItemTxColor, 0xff000000);
         channelItemTxSize = array.getDimensionPixelOffset(R.styleable.channel_tag_style_channelItemTxSize, 39);
+        itemDrawableLeft = array.getDrawable(R.styleable.channel_tag_style_itemDrawableLeft);
         setOrientation(VERTICAL);
         init();
     }
@@ -180,12 +195,12 @@ public class ChannelTagView extends LinearLayout {
         itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public boolean isItemViewSwipeEnabled() {
-                return true;
+                return swipeEnable;
             }
 
             @Override
             public boolean isLongPressDragEnabled() {
-                return true;
+                return longPressEnable;
             }
 
             @Override
@@ -205,12 +220,8 @@ public class ChannelTagView extends LinearLayout {
                 if (to == fixedPos) {
                     return false;
                 }
-//                Collections.swap(addedChannels, from, to);
                 ChannelItem item = addedChannels.remove(from);
                 addedChannels.add(to, item);
-//                for(int i = 0;i<addedChannels.size();i++){
-//                    Log.i("mytag","position == "+i+"--"+addedChannels.get(i).title);
-//                }
                 addedAdapter.notifyItemMoved(from, to);
                 return true;
             }
@@ -230,8 +241,6 @@ public class ChannelTagView extends LinearLayout {
                     ChannelItem removeChanle = addedChannels.remove(position);
                     addedAdapter.notifyItemRemoved(position);
                     insertToUnaddedChannel(removeChanle);
-//                    unAddedChannels.add(removeChanle);
-//                    unAddedAdapter.notifyItemInserted(unAddedChannels.size() - 1);
                     if (userActionListener != null) {
                         userActionListener.onSwiped(position, viewHolder.itemView, addedChannels, unAddedChannels);
                     }
@@ -280,7 +289,10 @@ public class ChannelTagView extends LinearLayout {
         addedAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-                ((BGABadgeTextView) view).hiddenBadge();
+                if (showItemDrawableLeft) {
+                    return;
+                }
+                ((BGABadgeTextView) view.findViewById(R.id.item_tv)).hiddenBadge();
                 if (onChannelItemClicklistener != null) {
                     onChannelItemClicklistener.onAddedChannelItemClick(view, position);
                 }
@@ -294,46 +306,30 @@ public class ChannelTagView extends LinearLayout {
         unAddedAdapter.setOnChildClickListener(new GroupedRecyclerViewAdapter.OnChildClickListener() {
             @Override
             public void onChildClick(GroupedRecyclerViewAdapter groupedRecyclerViewAdapter, BaseViewHolder baseViewHolder, int groupPosition, int childPosition) {
-                int position = groupedRecyclerViewAdapter.getPositionForChild(groupPosition, childPosition);
-                View convertView = baseViewHolder.get(R.id.item_tv);
-                ((BGABadgeTextView) convertView).hiddenBadge();
-                ChannelItem removeItem = unAddedGroups.get(groupPosition).getChannelItems().remove(childPosition);
-                if (showPahtAnim) {
-                    startPahtAnim(convertView, groupPosition, childPosition, removeItem);
-                } else {
-                    unAddedAdapter.removeChild(groupPosition, childPosition);
-                    addedChannels.add(removeItem);
-                    addedAdapter.notifyItemInserted(addedChannels.size() - 1);
+                if (showItemDrawableLeft) {
+                    return;
                 }
-                if (onChannelItemClicklistener != null) {
-                    // 用户在这个回调处理自己的逻辑 如果分组 会添加一个分组头 所以要减去分组头
-                    onChannelItemClicklistener.onUnAddedChannelItemClick(convertView, openCategory ? position - (groupPosition + 1) : position);
+                // 防止重复点击
+                if ((System.currentTimeMillis() - lastClickTime) > MIN_INTERVAL_TIME) {
+                    lastClickTime = System.currentTimeMillis();
+                    int position = groupedRecyclerViewAdapter.getPositionForChild(groupPosition, childPosition);
+                    View convertView = baseViewHolder.get(R.id.item_tv);
+                    ((BGABadgeTextView) convertView).hiddenBadge();
+                    ChannelItem removeItem = unAddedGroups.get(groupPosition).getChannelItems().remove(childPosition);
+                    if (showPahtAnim) {
+                        startPahtAnim(convertView, groupPosition, childPosition, removeItem);
+                    } else {
+                        unAddedAdapter.removeChild(groupPosition, childPosition);
+                        addedChannels.add(removeItem);
+                        addedAdapter.notifyItemInserted(addedChannels.size() - 1);
+                    }
+                    if (onChannelItemClicklistener != null) {
+                        // 用户在这个回调处理自己的逻辑 如果分组 会添加一个分组头 所以要减去分组头
+                        onChannelItemClicklistener.onUnAddedChannelItemClick(convertView, openCategory ? position - (groupPosition + 1) : position);
+                    }
                 }
             }
         });
-//        unAddedAdapter.setOnItemClickListener(new MultiItemTypeAdapter.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, RecyclerView.ViewHolder holder, int position) {
-//
-//                if (showPahtAnim) {
-//                    startPahtAnim(view, position);
-//                } else {
-//                    ChannelItem removeItem = unAddedChannels.remove(position);
-//                    unAddedAdapter.notifyItemRemoved(position);
-//                    addedChannels.add(removeItem);
-//                    addedAdapter.notifyItemInserted(addedChannels.size() - 1);
-//                }
-//                if (onChannelItemClicklistener != null) {
-//                    // 用户在这个回调处理自己的逻辑
-//                    onChannelItemClicklistener.onUnAddedChannelItemClick(view, position);
-//                }
-//            }
-//
-//            @Override
-//            public boolean onItemLongClick(View view, RecyclerView.ViewHolder holder, int position) {
-//                return false;
-//            }
-//        });
 
     }
 
@@ -508,8 +504,9 @@ public class ChannelTagView extends LinearLayout {
         }
 
         @Override
-        protected void convert(ViewHolder holder, ChannelItem channelItem, final int position) {
+        protected void convert(final ViewHolder holder, ChannelItem channelItem, final int position) {
             final BGABadgeTextView title = (BGABadgeTextView) holder.getConvertView().findViewById(R.id.item_tv);
+            final ImageView drawableLeft = (ImageView) holder.getConvertView().findViewById(R.id.item_drawable_left);
             if (fixedPos == position) {
                 holder.getConvertView().setBackgroundResource(fixedChannelBg);
             } else {
@@ -518,6 +515,28 @@ public class ChannelTagView extends LinearLayout {
             title.setTextColor(channelItemTxColor);
             title.setTextSize(TypedValue.COMPLEX_UNIT_PX, channelItemTxSize);
             title.setText(channelItem.title);
+            if (showItemDrawableLeft) {
+                if (itemDrawableLeft != null) {
+                    drawableLeft.setImageDrawable(itemDrawableLeft);
+                }
+                drawableLeft.setVisibility(VISIBLE);
+                drawableLeft.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (null != onChannelItemClicklistener) {
+                            int pos = holder.getAdapterPosition();
+                            if (pos != fixedPos) {
+                                ChannelItem removeChanle = addedChannels.remove(pos);
+                                addedAdapter.notifyItemRemoved(pos);
+                                insertToUnaddedChannel(removeChanle);
+                                onChannelItemClicklistener.onItemDrawableClickListener(holder.getConvertView(), pos);
+                            }
+                        }
+                    }
+                });
+            } else {
+                drawableLeft.setVisibility(GONE);
+            }
             if (redDotRemainderListener != null) {
                 if (redDotRemainderListener.showAddedChannelBadge(title, position)) {
                     title.getBadgeViewHelper().setDragable(false);
@@ -677,6 +696,14 @@ public class ChannelTagView extends LinearLayout {
     }
 
     /**
+     * remove fixed position
+     */
+    public void removeFixedItem() {
+        this.fixedPos = -1;
+        addedAdapter.notifyDataSetChanged();
+    }
+
+    /**
      * set fixed item background ResID
      *
      * @param fixedChannelBgResID
@@ -801,23 +828,67 @@ public class ChannelTagView extends LinearLayout {
 
     /**
      * 设置未添加栏目的分组头文字颜色
+     *
      * @param color
      */
-    public void setCategoryItemTxColor(int color){
+    public void setCategoryItemTxColor(int color) {
         unAddedAdapter.setCategoryTxColor(color);
     }
+
     /**
      * 设置未添加栏目的分组头文字大小
+     *
      * @param size
      */
-    public void setCategoryItemTxSize(int size){
+    public void setCategoryItemTxSize(int size) {
         unAddedAdapter.setCategoryTxSize(size);
+    }
+
+    /**
+     * get weather swipe enable
+     * @return true or false
+     */
+    public boolean isSwipeEnable() {
+        return swipeEnable;
+    }
+    /**
+     * set weather swipe enable
+     */
+    public void setSwipeEnable(boolean swipeEnable) {
+        this.swipeEnable = swipeEnable;
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         FloatItemViewManager.removeFloawAdView(getContext());
+    }
+
+    /**
+     * weather or not show item left drawable
+     * @param showDrawableLeft
+     */
+    public void showItemDrawableLeft(boolean showDrawableLeft) {
+        showItemDrawableLeft = showDrawableLeft;
+//        longPressEnable = !showItemDrawableLeft;
+//        swipeEnable = !showDrawableLeft;
+        addedAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * get weather or not show item left drawbale
+     * @return
+     */
+    public boolean isShowItemDrawableLeft() {
+        return showItemDrawableLeft;
+    }
+
+    /**
+     * set item left drawable
+     * @param itemDrawableLeft
+     */
+    public void setItemDrawableLeft(Drawable itemDrawableLeft) {
+        this.itemDrawableLeft = itemDrawableLeft;
     }
 
     public ArrayList<ChannelItem> getUnAddedChannels() {

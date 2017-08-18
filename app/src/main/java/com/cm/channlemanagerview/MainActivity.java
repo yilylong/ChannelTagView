@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<ChannelItem> addedChannels = new ArrayList<>();
     private ArrayList<ChannelItem> unAddedChannels = new ArrayList<>();
     private ArrayList<GroupItem> unAddedItems = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,8 +35,19 @@ public class MainActivity extends AppCompatActivity {
                 channelTagView.oPenCategory(!channelTagView.isOpenCategory());
             }
         });
+        Button btnShow = (Button) findViewById(R.id.btn_showdrawableleft);
+        btnShow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                channelTagView.showItemDrawableLeft(!channelTagView.isShowItemDrawableLeft());
+            }
+        });
         channelTagView.showPahtAnim(true);
-        channelTagView.setCategoryItemBg(R.color.content_color);
+//        channelTagView.showItemDrawableLeft(true);
+//        channelTagView.setSwipeEnable(false);
+//        channelTagView.setCategoryItemBg(R.color.content_color);
+//        channelTagView.setCategoryItemTxColor(ContextCompat.getColor(this,R.color.content_color));
+//        channelTagView.setCategoryItemTxSize(18);
 //        channelTagView.setChannelItemTxColor(Color.BLUE);
 //        channelTagView.setChannelItemBg(R.drawable.custom_channel_item_bg);
 //        channelTagView.setCategrayUnAddedBannerTX("更多栏目");
@@ -43,22 +55,22 @@ public class MainActivity extends AppCompatActivity {
 //        channelTagView.setCategoryBannerTXsize(40);
 //        channelTagView.setCategoryBannerTXColor(Color.argb(255,221,224,98));
 //        channelTagView.setColumnVerticalSpace(20);
-        channelTagView.initChannels(addedChannels, unAddedItems,true,new ChannelTagView.RedDotRemainderListener() {
+        channelTagView.initChannels(addedChannels, unAddedItems, true, new ChannelTagView.RedDotRemainderListener() {
 
             @Override
             public boolean showAddedChannelBadge(BGABadgeTextView itemView, int position) {
-                if(addedChannels.get(position).title.equals("直播")){
+                if (addedChannels.get(position).title.equals("直播")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
 
             @Override
             public boolean showUnAddedChannelBadge(BGABadgeTextView itemView, int position) {
-                if(unAddedChannels.get(position).title.equals("数码")||unAddedChannels.get(position).title.equals("科技")){
+                if (unAddedChannels.get(position).title.equals("数码") || unAddedChannels.get(position).title.equals("科技")) {
                     return true;
-                }else{
+                } else {
                     return false;
                 }
             }
@@ -70,16 +82,16 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void handleUnAddedChannelReddot(BGABadgeTextView itemView, int position) {
-                if(unAddedChannels.get(position).title.equals("科技")){
+                if (unAddedChannels.get(position).title.equals("科技")) {
                     itemView.showTextBadge("new");
-                }else{
+                } else {
                     itemView.showCirclePointBadge();
                 }
             }
 
             @Override
             public void OnDragDismiss(BGABadgeTextView itemView, int position) {
-                Toast.makeText(MainActivity.this,"拖拽取消红点提示-",Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "拖拽取消红点提示-", Toast.LENGTH_SHORT).show();
                 itemView.hiddenBadge();
             }
 
@@ -91,27 +103,33 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onAddedChannelItemClick(View itemView, int position) {
-                Toast.makeText(MainActivity.this,"打开-"+addedChannels.get(position).title,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "打开-" + addedChannels.get(position).title, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onUnAddedChannelItemClick(View itemView, int position) {
                 ChannelItem item = unAddedChannels.remove(position);
                 addedChannels.add(item);
-                Toast.makeText(MainActivity.this,"添加频道-"+item.title,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "添加频道-" + item.title, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemDrawableClickListener(View itemView, int position) {
+                Toast.makeText(MainActivity.this, "删除-" + MainActivity.this.addedChannels.get(position).title, Toast.LENGTH_SHORT).show();
+                unAddedChannels.add(addedChannels.remove(position));
             }
         });
         channelTagView.setUserActionListener(new UserActionListener() {
             @Override
             public void onMoved(int fromPos, int toPos, ArrayList<ChannelItem> checkedChannels) {
-                Toast.makeText(MainActivity.this,"将-"+addedChannels.get(fromPos).title+" 换到 "+addedChannels.get(toPos).title,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "将-" + addedChannels.get(fromPos).title + " 换到 " + addedChannels.get(toPos).title, Toast.LENGTH_SHORT).show();
                 addedChannels.clear();
                 addedChannels.addAll(checkedChannels);
             }
 
             @Override
             public void onSwiped(int position, View itemView, ArrayList<ChannelItem> checkedChannels, ArrayList<ChannelItem> uncheckedChannels) {
-                Toast.makeText(MainActivity.this,"删除-"+MainActivity.this.addedChannels.remove(position).title,Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "删除-" + MainActivity.this.addedChannels.remove(position).title, Toast.LENGTH_SHORT).show();
                 unAddedChannels.clear();
                 unAddedChannels.addAll(uncheckedChannels);
             }
@@ -124,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
-            item.category ="头条";
+            item.category = "头条";
             addedChannels.add(item);
         }
         GroupItem groupFinance = new GroupItem();
@@ -133,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
-            item.category ="金融";
+            item.category = "金融";
             unAddedChannels.add(item);
             groupFinance.addChanelItem(item);
         }
@@ -145,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
-            item.category ="生活";
+            item.category = "生活";
             unAddedChannels.add(item);
             groupLife.addChanelItem(item);
         }
@@ -157,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
-            item.category ="娱乐";
+            item.category = "娱乐";
             unAddedChannels.add(item);
             groupEntertainment.addChanelItem(item);
         }
@@ -169,7 +187,7 @@ public class MainActivity extends AppCompatActivity {
             ChannelItem item = new ChannelItem();
             item.id = i;
             item.title = chanles[i];
-            item.category ="人文";
+            item.category = "人文";
             unAddedChannels.add(item);
             Grouphumanity.addChanelItem(item);
         }

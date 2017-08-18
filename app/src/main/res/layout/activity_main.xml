@@ -4,13 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.zhl.channeltagview.view.ChannelTagView
-        android:id="@+id/channel_tag_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:channelItemTxSize="@dimen/channel_item_txsize"
-        app:fixedPos="0" />
-
     <Button
         android:id="@+id/btn_opencategory"
         android:layout_width="wrap_content"
@@ -19,5 +12,23 @@
         android:gravity="center"
         android:padding="5dp"
         android:text="开启/关闭分组" />
+
+    <Button
+        android:id="@+id/btn_showdrawableleft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right|bottom"
+        android:layout_marginRight="150dp"
+        android:gravity="center"
+        android:padding="5dp"
+        android:text="显示/隐藏icon" />
+
+    <com.zhl.channeltagview.view.ChannelTagView
+        android:id="@+id/channel_tag_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:channelItemTxSize="@dimen/channel_item_txsize"
+        app:fixedPos="0" />
+
 
 </FrameLayout>

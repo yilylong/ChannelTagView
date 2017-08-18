@@ -13,5 +13,6 @@
         <attr name="columnVerticalSpace" format="integer|reference|dimension" />
         <attr name="channelItemTxColor" format="color|reference" />
         <attr name="channelItemTxSize" format="reference|dimension" />
+        <attr name="itemDrawableLeft" format="reference|integer" />
     </declare-styleable>
 </resources>

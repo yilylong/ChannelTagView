@@ -94,10 +94,10 @@ public class GroupedListAdapter extends GroupedRecyclerViewAdapter {
     @Override
     public void onBindChildViewHolder(BaseViewHolder holder, int groupPosition, int childPosition) {
         ChannelItem entity = mGroups.get(groupPosition).getChannelItems().get(childPosition);
-        holder.setText(R.id.item_tv, entity.title);
         final BGABadgeTextView title = (BGABadgeTextView) holder.get(R.id.item_tv);
+        title.setText(entity.title);
         if(itemTxColor!=-1){
-            holder.setTextColor(R.id.item_tv,itemTxColor);
+            title.setTextColor(itemTxColor);
         }
         if(itemBg!=-1){
             title.setBackgroundResource(itemBg);
