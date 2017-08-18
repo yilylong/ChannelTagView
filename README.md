@@ -5,15 +5,6 @@
 ----
 <img src="GIF.gif"/>
 
-添加频道分组功能
---
-<img src="show_category.png"/>
-<video id="video" controls="" preload="none" poster="show_category.png">
-      <source id="mp4" src="show.mp4" type="video/mp4">
-      <p>Your user agent does not support the HTML5 Video element.</p>
-</video>
-
-
 
 使用
 --
@@ -45,5 +36,6 @@ xml中直接引用：
         />
  
  
- 调用 ChannelTagView的initChannels() 方法填充数据即可。有针对里面的item修改的各种属性，针对点击事件和用户的拖动滑动事件接口监听。详情查看demo
+ 调用 ChannelTagView的initChannels() 方法填充数据即可。有针对里面的item修改的各种属性，针对点击事件和用户的拖动滑动事件接口监听。
+ 4.4一下可能需要<uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>权限，详情查看demo
  
