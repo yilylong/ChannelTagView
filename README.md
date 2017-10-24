@@ -14,14 +14,14 @@
     allprojects {
 		repositories {
 			...
-			maven { url 'https://jitpack.io' }
+			maven { url 'https://www.jitpack.io' }
 		}
 	}
 
 stpe2.Add the dependency:
 -
     dependencies {
-	        compile 'com.github.yilylong:ChannelTagView:1.0.1'
+	        compile 'com.github.yilylong:ChannelTagView:v1.0.1'
 	}
 
 
